@@ -1,0 +1,15 @@
+{
+  "appId": "com.ping.test",
+  "appName": "Ping测试",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "allowsLinkPreview": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

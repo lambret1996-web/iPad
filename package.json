@@ -1,0 +1,17 @@
+{
+  "name": "ping-test-ipa",
+  "version": "1.0.0",
+  "description": "Ping全自动延迟测试 - 网页封装IPA",
+  "main": "index.js",
+  "scripts": {
+    "sync": "cap sync",
+    "open:ios": "cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}
