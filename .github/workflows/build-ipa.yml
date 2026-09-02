@@ -1,0 +1,48 @@
+name: 构建未签名IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: macos-14
+    timeout-minutes: 30
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 安装 Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: 安装依赖
+        run: npm install
+      - name: 添加 iOS 平台
+        run: npx cap add ios
+      - name: 配置 iOS 允许HTTP测速
+        run: |
+          plutil -replace NSAppTransportSecurity -json '{"NSAllowsArbitraryLoads": true}' ios/App/App/Info.plist
+      - name: 同步网页资源
+        run: npx cap sync ios
+      - name: 编译 App（不签名）
+        run: |
+          cd ios/App
+          xcodebuild -project App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+      - name: 打包为IPA
+        run: |
+          cd ios/App
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -r ../../Ping测试-未签名.ipa Payload
+      - name: 上传IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ping-test-ipa
+          path: Ping测试-未签名.ipa
